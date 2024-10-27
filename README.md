@@ -2,6 +2,29 @@
 
 A high-performance Python library for intelligent video frame extraction and analysis. This system provides sophisticated frame analysis, adaptive keyframe detection, and efficient resource management for processing video files.
 
+The module interaction diagram illustrates how key modules communicate during the processing of a video file.
+
+```mermaid
+sequenceDiagram
+    participant CLI as Command Line (cli-script)
+    participant Config as Configuration (config.py)
+    participant Model as FrameExtractionModel (model.py)
+    participant Buffer as FrameBuffer (buffer.py)
+    participant Analyzer as FrameAnalyzer
+    participant Output as Output Directory
+
+    CLI->>Config: Load parameters
+    CLI->>Model: Initialize FrameExtractionModel
+    Model->>Buffer: Allocate FrameBuffer
+    Model->>Analyzer: Initialize Analyzer
+
+    CLI->>Model: Process video
+    Model->>Buffer: Add frame to buffer
+    Buffer-->>Analyzer: Pass frame for analysis
+    Analyzer->>Model: Detect keyframes
+    Model->>Output: Save keyframe to output directory
+```
+
 ## Features
 
 ### Core Capabilities
