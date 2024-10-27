@@ -1,8 +1,8 @@
 # Advanced Video Frame Extraction
 
-A high-performance Python library for intelligent video frame extraction and analysis. This system provides sophisticated frame analysis, adaptive keyframe detection, and efficient resource management for processing video files.
+A high-performance Python library for video frame extraction and analysis, suited to medical imagery or generic videos for example screen captures. This system provides key-frame analysis, adaptive keyframe detection, efficient multi-threading, multi input- and output- format support and resource management 
 
-The module interaction diagram illustrates how key modules communicate during the processing of a video file.
+The module interaction diagram shows how key modules communicate during the processing of a video file.
 
 ```mermaid
 sequenceDiagram
@@ -28,13 +28,12 @@ sequenceDiagram
 ## Features
 
 ### Core Capabilities
-- Intelligent keyframe detection using motion and content analysis
+- Intelligent keyframe detection using motion and content analysis over multiple previous frames
 - Inference mode to calculate thresholds to generate _N_ keyframes from the video
 - Concurrent frame processing with configurable thread pools
-- Memory-efficient frame buffering
-- Comprehensive video metadata extraction
+- Memory-efficient frame buffering and performance caching
 - Multiple output format support (PNG, JPEG, WebP)
-- Detailed debug logging mode available for troubleshooting
+- Thorough debug logging mode 
 
 ### Analysis Features
 - Motion detection using optical flow analysis
@@ -48,9 +47,8 @@ sequenceDiagram
 
 ### Performance Features
 - Configurable thread pool for parallel processing
-- Memory-optimized frame buffer
+- Memory-optimized frame buffer and recent frame cache
 - Minimal frame copying through efficient view operations
-- Automatic resource cleanup
 - Retry mechanism with exponential backoff
 
 ## System Requirements
@@ -90,7 +88,7 @@ python cli-script.py input.mp4 output_dir/ \
 ```
 
 #### Frame Analysis Settings
-Configure intelligent frame selection:
+Configure key-frame selection:
 ```bash
 # Enable keyframe detection with custom similarity threshold
 python cli-script.py input.mp4 output_dir/ \
@@ -187,7 +185,7 @@ Note there is a discrepency between estimated and actual frames generated becaus
   - JPEG/WebP: 0-100 (100 = best quality)
 
 #### Processing Options
-- `--enable-keyframes`: Enable intelligent keyframe detection
+- `--enable-keyframes`: Enable keyframe detection
 - `--similarity`: Similarity threshold (0.0-1.0, default: 0.95)
 - `--target-frames`: When specified enables automatic estimation of `--similarity` value so _n_ frames are produced
 - `--threads`: Number of processing threads (default: CPU cores - 1)
