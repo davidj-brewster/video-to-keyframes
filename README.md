@@ -28,12 +28,12 @@ sequenceDiagram
 ## Features
 
 ### Core Capabilities
-- Intelligent keyframe detection using motion and content analysis over multiple previous frames
-- Inference mode to calculate thresholds to generate _N_ keyframes from the video
-- Concurrent frame processing with configurable thread pools
-- Memory-efficient frame buffering and performance caching
+- "Key-frame" detection (to identify rhe most significant frames within videos having some continuous movement). This is done using motion and content analysis (from opencv library) over multiple previous frames
+- Inference pre-computation mode to estimate the sensitivity needed to generate _N_ keyframes from the video
+- Concurrent frame processing with configurable thread pools, and a shared thread-safe frame cache
+- Memory-efficient frame buffering, memory management to limit total memory utilisation
 - Multiple output format support (PNG, JPEG, WebP)
-- Thorough debug logging mode 
+- Thorough debug logging
 
 ### Analysis Features
 - Motion detection using optical flow analysis
@@ -47,9 +47,9 @@ sequenceDiagram
 
 ### Performance Features
 - Configurable thread pool for parallel processing
-- Memory-optimized frame buffer and recent frame cache
-- Minimal frame copying through efficient view operations
-- Retry mechanism with exponential backoff
+- Memory-optimized thread-safe frame buffer and recent frame cache
+- Minimal frame copying via efficient np view operations
+- Retry mechanims for failed frame extraction via exponential backoff with jitter (jusy because ;))
 
 ## System Requirements
 
