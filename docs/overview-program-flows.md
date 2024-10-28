@@ -10,16 +10,23 @@ This document provides a visual and structural overview of the video frame extra
 This diagram shows the end-to-end flow, from loading the video file and configuration to extracting keyframes and saving the results.
 
 ```mermaid
-flowchart TD
-    A[Input Video File] --> B[Load Configuration]
-    B --> C[Initialize FrameExtractionModel]
-    C --> D[Extract Metadata]
-    D --> E{Perform Inference}
-    E -->|Estimate Threshold| F[Calculate Keyframe Threshold]
-    F --> G[Process Frames with Threshold]
-    G --> H[Save Keyframes to Output]
-    H --> I[Log and Cleanup]
-    I --> J[Output Keyframes]
+flowchart LR
+    A[Input Video File] --> B[Init,Metadata]
+    B --> E[Inference]
+    E --> F[Keyframe Threshold]
+    F --> G[KeyFrames]
+    B --> G[KeyFrames]
+    B --> K[ALLFrames]
+    K --> H[Save]
+    G --> H[Save]
+
+    style A font-size:10px
+    style B font-size:10px
+    style E font-size:10px
+    style F font-size:10px
+    style G font-size:10px
+    style H font-size:10px
+    style K font-size:10px
 ```
 
 ---
