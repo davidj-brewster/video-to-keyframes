@@ -2,7 +2,7 @@
 
 A high-performance Python library for video frame extraction and analysis, suited to medical imagery or generic videos for example screen captures. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, efficient multi-threading amd memory management. it supported various Movie input and Image output formats. 
 
-The module interaction diagram shows how main components communicate during the processing of a video file.
+The module interaction diagram shows how the main components communicate during the processing of a video file.
 
 ```mermaid
 sequenceDiagram
