@@ -13,7 +13,7 @@ This diagram shows the end-to-end flow using the CLI tool to interact with the m
 flowchart LR
     A[Input Video File] --> B[Init,Metadata]
     B --> E[Inference]
-    E --> F[Keyframe Threshold]
+    E --> F[Key Frame Threshold]
     F --> G[KeyFrames]
     B --> G[KeyFrames]
     B --> K[ALLFrames]
@@ -58,54 +58,27 @@ sequenceDiagram
 
 ---
 
-## 3. Keyframe Detection Workflow
+## 3. Key Frame Detection Workflow
 
 This flowchart demonstrates the process of detecting keyframes within a video by comparing frames and selecting those that meet a defined similarity threshold.
 
 ```mermaid
 flowchart TD
-    A[Start Keyframe Detection] --> B[Load Frame from Buffer]
-    B --> C{Check if Frame is Keyframe}
-    C -->|Yes| D[Mark as Keyframe]
+    A[Start Key Frame Detection] --> B[Load Frame from Buffer]
+    B --> C{First frame} 
+    C -->|Yes| D[Mark as Key Frame]
     C -->|No| E[Compare with Previous Frame]
     E --> F{Similarity < Threshold?}
-    F -->|Yes| G[Save as Keyframe]
+    F -->|Yes| G[Save as Key Frame]
     F -->|No| H[Discard Frame]
-    G --> I[Store Metadata for Keyframe]
+    G --> I[Store Metadata for Key Frame]
     H --> B
-    I --> J[End Keyframe Detection]
+    I --> J[End Key Frame Detection]
 ```
 
 ---
 
-## 4. Error Handling Flow
-
-The following flowchart outlines the error handling logic, detailing how different types of errors (e.g., `CodecError`, `TimeoutError`, `ResourceError`) are managed within the program.
-
-```mermaid
-flowchart TD
-    A[Start Processing] --> B{Error Occurred?}
-    B -->|No| C[Continue Processing]
-    B -->|Yes| D{Error Type?}
-    
-    D -->|CodecError| E[Log Codec Issue]
-    E --> F[Try Alternate Codec]
-    F --> B
-
-    D -->|ResourceError| G[Log Resource Issue]
-    G --> H[Adjust Memory Allocation]
-    H --> B
-
-    D -->|TimeoutError| I[Log Timeout]
-    I --> J[Retry Operation with Delay]
-    J --> B
-
-    C --> K[End Processing]
-```
-
----
-
-## 5. Configuration and Threshold Adjustment Flow
+## 4. Configuration and Threshold Adjustment Flow
 
 This flowchart details the configuration loading and dynamic adjustment process to ensure the program operates efficiently based on available resources and video properties.
 
@@ -123,7 +96,7 @@ flowchart TD
     D --> I[Start Processing with Config]
     G --> I
     H --> I
-    I --> J[Proceed to Keyframe Detection]
+    I --> J[Proceed to Key Frame Detection]
 ```
 
 ---
