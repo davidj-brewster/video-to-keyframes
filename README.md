@@ -77,9 +77,7 @@ python cli-script.py input.mp4 output_dir/
 
 ### Advanced Usage Options
 
-<summary>Expand for more advanced configuration examples including controlling format and quality of output, configuring key-frame selection, optimising system resource utilisation and thread concurrency, logging parameters and failure/retry handling
-</summary>
-
+<summary>Expand for more advanced configuration examples including controlling format and quality of output, configuring key-frame selection, optimising system resource utilisation and thread concurrency, logging parameters and failure/retry handling</summary>
 <details>
 #### Output Format Configuration
 Control the format and quality of extracted frames:
@@ -134,6 +132,7 @@ python cli-script.py input.mp4 output_dir/ \
     --log-level DEBUG \
     --log-file processing.log
 ```
+
 </details>
 
 ### Complete Usage Example
@@ -158,7 +157,7 @@ python ./cli-script.py
     --target-frames 8  input.mp4 output/
 ```
 
-<summary>Expand to see a visual representations of the processing flow
+<summary>Expand to see a visual representation and sample execution outputs of the processing flow
 </summary>
 
 <details>
@@ -210,6 +209,8 @@ Successfully extracted 35 frames to output
 2024-10-27 13:44:15,974 - common - INFO - System cleanup completed
 ```
 Note there is a discrepency between estimated and actual frames generated because the estimator uses a simplified method to estimate key frame thresholds, whilst the full extraction compares not just a frame with its preceding 2 frames but a configurable number typically much higher. If this is problematic you can adjust the target frames accordingly.
+
+</details>
 
 ### Parameters Reference
 
