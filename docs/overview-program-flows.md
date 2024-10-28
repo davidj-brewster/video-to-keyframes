@@ -5,9 +5,9 @@ This document provides a visual and structural overview of the video frame extra
 
 ---
 
-## 1. Overall Program Flow
+## 1. Simplified Processing flowchart
 
-This diagram shows the end-to-end flow, from loading the video file and configuration to extracting keyframes and saving the results.
+This diagram shows the end-to-end flow using the CLI tool to interact with the module :- from loading the video file and configuration to extracting keyframes and saving the results.
 
 ```mermaid
 flowchart LR
@@ -33,7 +33,7 @@ flowchart LR
 
 ## 2. Module Interaction
 
-The module interaction diagram illustrates how key modules, such as `FrameExtractionModel`, `FrameBuffer`, `FrameAnalyzer`, and others, communicate during the processing of a video file.
+Thus diagram shows how key the modules, such as `FrameExtractionModel`, `FrameBuffer`, `FrameAnalyzer`, communicate during the processing of a video file into a set of frames.
 
 ```mermaid
 sequenceDiagram
