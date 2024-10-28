@@ -4,7 +4,6 @@ A high-performance Python library for video frame extraction and analysis, suite
 
 <summary>Expand to see a visual representations of the library and CLI tool's processing of a video file
 </summary>
-
 <details>
 The module interaction diagram shows how the main components communicate during the processing of a video file.
 
@@ -14,19 +13,19 @@ sequenceDiagram
     participant Config as Configuration (config.py)
     participant Model as FrameExtractionModel (model.py)
     participant Buffer as FrameBuffer (buffer.py)
-    participant Analyzer as FrameAnalyzer
+    participant Analyser as FrameAnalyser
     participant Output as Output Directory
 
     CLI->>Config: Load parameters
     CLI->>Model: Initialize FrameExtractionModel
     Model->>Buffer: Allocate FrameBuffer
-    Model->>Analyzer: Initialize Analyzer
+    Model->>Analyser: Initialize Analyser
 
     CLI->>Model: Process video
     Model->>Buffer: Add frame to buffer
-    Buffer-->>Analyzer: Pass frame for analysis
-    Analyzer->>Model: Detect keyframes
-    Model->>Output: Save keyframe to output directory
+    Buffer-->>Analyser: Pass frame for analysis
+    Analyser->>Model: Detect key frames
+    Model->>Output: Save key frame to output directory
 ```
 </details>
 
@@ -34,7 +33,7 @@ sequenceDiagram
 
 ### Core Capabilities
 - "Key-frame" detection (to identify rhe most significant frames within videos having some continuous movement). This is done using motion and content analysis (from opencv library) over multiple previous frames
-- Inference pre-computation mode to estimate the sensitivity needed to generate _N_ keyframes from the video
+- Inference pre-computation mode to estimate the sensitivity needed to generate _N_ key frames from the video
 - Concurrent frame processing with configurable thread pools, and a shared thread-safe frame cache
 - Memory-efficient frame buffering, memory management to limit total memory utilisation
 - Multiple output format support (PNG, JPEG, WebP)
@@ -99,7 +98,7 @@ python cli-script.py input.mp4 output_dir/ \
 #### Frame Analysis Settings
 Configure key-frame selection:
 ```bash
-# Enable keyframe detection with custom similarity threshold
+# Enable key frame detection with custom similarity threshold
 python cli-script.py input.mp4 output_dir/ \
     --enable-keyframes \
     --similarity 0.90
@@ -172,7 +171,7 @@ This shows the processing flow, covering the three main scenarios and the flow t
 flowchart LR
     A[Input Video File] --> B[Init,Metadata]
     B --> E[Inference]
-    E --> F[Keyframe Threshold]
+    E --> F[Key Frame Threshold]
     F --> G[KeyFrames]
     B --> G[KeyFrames]
     B --> K[ALLFrames]
@@ -193,7 +192,7 @@ flowchart LR
 ```bash
 2024-10-27 13:44:13,490 - common - INFO - Logging configured at level 20
 2024-10-27 13:44:13,490 - common - INFO - Video processing system initialized
-2024-10-27 13:44:13,495 - __main__ - INFO - Created configuration: {'output_format': <OutputFormat.PNG: ('png', [16], False)>, 'compression_quality': 9, 'detect_keyframes': True, 'similarity_threshold': 0.999620166015625, 'thread_count': 1, 'buffer_size': 60, 'cache_size': 60, 'enable_cache': True, 'max_memory_usage': None, 'retry_attempts': 3, 'retry_delay': 0.5, 'frame_timeout': 5.0, 'video_timeout': 30.0}
+2024-10-27 13:44:13,495 - __main__ - INFO - Created configuration: {'output_format': <OutputFormat.PNG: ('png', [16], False)>, 'compression_quality': 9, 'detect_key frames': True, 'similarity_threshold': 0.999620166015625, 'thread_count': 1, 'buffer_size': 60, 'cache_size': 60, 'enable_cache': True, 'max_memory_usage': None, 'retry_attempts': 3, 'retry_delay': 0.5, 'frame_timeout': 5.0, 'video_timeout': 30.0}
 2024-10-27 13:44:13,495 - __main__ - INFO - Running inference mode to target 8 frames
 Progress: 22%2024-10-27 13:44:15,657 - nframes - INFO - Found acceptable threshold 0.99829 producing 8 frames (target: 8)
 2024-10-27 13:44:15,657 - __main__ - INFO - Inference complete: threshold=0.998, estimated frames=8
@@ -205,12 +204,12 @@ Search iterations: 12
 
 Processing video with inferred threshold...
 Progress: 100%
-2024-10-27 13:44:15,973 - processor - INFO - Processed 180 frames, kept 35 keyframes
+2024-10-27 13:44:15,973 - processor - INFO - Processed 180 frames, kept 35 key frames
 2024-10-27 13:44:15,973 - __main__ - INFO - Processing complete. Extracted 35 frames.
 Successfully extracted 35 frames to output
 2024-10-27 13:44:15,974 - common - INFO - System cleanup completed
 ```
-Note there is a discrepency between estimated and actual frames generated because the estimator uses a simplified method to estimate keyframe thresholds, whilst the full extraction compares not just a frame with its preceding 2 frames but a configurable number typically much higher. If this is problematic you can adjust the target frames accordingly.
+Note there is a discrepency between estimated and actual frames generated because the estimator uses a simplified method to estimate key frame thresholds, whilst the full extraction compares not just a frame with its preceding 2 frames but a configurable number typically much higher. If this is problematic you can adjust the target frames accordingly.
 
 ### Parameters Reference
 
@@ -224,7 +223,7 @@ Note there is a discrepency between estimated and actual frames generated becaus
   - JPEG/WebP: 0-100 (100 = best quality)
 
 #### Processing Options
-- `--enable-keyframes`: Enable keyframe detection
+- `--enable-keyframes`: Enable key frame detection
 - `--similarity`: Similarity threshold (0.0-1.0, default: 0.95)
 - `--target-frames`: When specified enables automatic estimation of `--similarity` value so _n_ frames are produced
 - `--threads`: Number of processing threads (default: CPU cores - 1)
