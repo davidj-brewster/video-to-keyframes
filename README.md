@@ -1,7 +1,11 @@
-# Advanced Video Frame Extraction
+# Video Frame Extractor
 
-A high-performance Python library for video frame extraction and analysis, suited to medical imagery or generic videos for example screen captures. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, efficient multi-threading amd memory management. it supported various Movie input and Image output formats. 
+A high-performance Python library for video frame extraction and analysis, suited to medical imagery or generic videos for example screen captures. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, multi-threading amd memory management. it supported various Video input and Image output formats. 
 
+<summary>Expand to see a visual representations of the library and CLI tool's processing of a video file
+</summary>
+
+<details>
 The module interaction diagram shows how the main components communicate during the processing of a video file.
 
 ```mermaid
@@ -24,6 +28,7 @@ sequenceDiagram
     Analyzer->>Model: Detect keyframes
     Model->>Output: Save keyframe to output directory
 ```
+</details>
 
 ## Features
 
@@ -73,6 +78,10 @@ python cli-script.py input.mp4 output_dir/
 
 ### Advanced Usage Options
 
+<summary>Expand for more advanced configuration examples including controlling format and quality of output, configuring key-frame selection, optimising system resource utilisation and thread concurrency, logging parameters and failure/retry handling
+</summary>
+
+<details>
 #### Output Format Configuration
 Control the format and quality of extracted frames:
 ```bash
@@ -126,6 +135,7 @@ python cli-script.py input.mp4 output_dir/ \
     --log-level DEBUG \
     --log-file processing.log
 ```
+</details>
 
 ### Complete Usage Example
 ```bash
@@ -147,6 +157,35 @@ python ./cli-script.py
     --format png 
     --inference-tolerance 0.00001 
     --target-frames 8  input.mp4 output/
+```
+
+<summary>Expand to see a visual representations of the processing flow
+</summary>
+
+<details>
+This shows the processing flow, covering the three main scenarios and the flow through the cli tool to the library - 
+- full-frame extraction
+- extraction of key-frames based on a fixed similarity threshold you provide
+- extraction of approximately _N_ key frames based on inferential estimation of the sensitivity threshold needed to produce the specific number of frames
+
+```mermaid
+flowchart LR
+    A[Input Video File] --> B[Init,Metadata]
+    B --> E[Inference]
+    E --> F[Keyframe Threshold]
+    F --> G[KeyFrames]
+    B --> G[KeyFrames]
+    B --> K[ALLFrames]
+    K --> H[Save]
+    G --> H[Save]
+
+    style A font-size:10px
+    style B font-size:10px
+    style E font-size:10px
+    style F font-size:10px
+    style G font-size:10px
+    style H font-size:10px
+    style K font-size:10px
 ```
 
 ### Sample output including inference mode
