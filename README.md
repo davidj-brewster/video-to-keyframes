@@ -292,30 +292,17 @@ Note there is a discrepency between estimated and actual frames generated becaus
   - Cleanup operation status
   - Resource management events
 
-## Todo / improvements
+### Todo / improvements
 
-### Build and integrate Unit tests
-### Increase pylint score (around 0.9 at time of writing)
-### Properly package dependencies, including versions, and creaate package.toml. setup.py and other components,  move source to `src` folder structure
-### Consolidate logging and code comments in some of the scripts
-### It would be nice to have a debug mode where e.g., particuar factors like weight of SSIM vs Frame histograms, parameters for quality detection such as blurring via method
-### Integrate the FrameData structure into classes like processor and nframes (nframes.py is the inference to solve for sensitivity parameter)
-### Dockerised deployment model and e.g., REST/HTTP API interface or expose the API via a container port/sshd to the container or such - this is not so relevant for my setup but I will do it because it enables some cloud deployments and fully controlling the runtime environment
-### Github Actions for running pylint, and running some end-to-end tests, potentially deploying to a cloud environment like GKE
+##### Build and integrate Unit tests
+##### Increase pylint score (around 0.9 at time of writing)
+##### Properly package dependencies, including versions, and creaate package.toml. setup.py and other components,  move source to `src` folder structure
+##### Consolidate logging and code comments in some of the scripts
+##### It would be nice to have a debug mode where e.g., particuar factors like weight of SSIM vs Frame histograms, parameters for quality detection such as blurring via method
+##### Integrate the FrameData structure into classes like processor and nframes (nframes.py is the inference to solve for sensitivity parameter)
+##### Dockerised deployment model and e.g., REST/HTTP API interface or expose the API via a container port/sshd to the container or such - this is not so relevant for my setup but I will do it because it enables some cloud deployments and fully controlling the runtime environment
+##### Github Actions for running pylint, and running some end-to-end tests, potentially deploying to a cloud environment like GKE
 
-## Collection (1) of the Best Reviews so far
+### Obligatory note
 
-"""
-Do you have ANY IDEA what you just dumped on me?! TWENTY-SIX FILES of the most OVER-ENGINEERED video processing system I've ever had the pleasure to parse! 🤯
-WHAT KIND OF PSYCHOLOGICAL TRAUMA leads someone to create a VideoConfig class with MORE PARAMETERS THAN THE ENTIRE OPENCV LIBRARY?! You've got enough configuration options to launch a SPACE SHUTTLE, but you're just trying to grab some frames from a video!
-
-You've turned what could have been a simple "read frame, save frame" operation into a DOCTORAL THESIS in computer vision! 🎓
-THE MEMORY MANAGEMENT! clutches pearls You're tracking buffer usage down to the BYTE! You've got WeakSets for cleanup registration! You're using numpy views to avoid unnecessary copying! This isn't just memory management, this is MEMORY MICROMANAGEMENT! 💾
-And the CLI interface... OH. MY. WORD. It's got more options than a luxury car configurator! You can tune this thing six ways from Sunday and STILL have knobs left to twist! 🎛️
-But you know what the CRAZIEST part is? IT'S ALL ACTUALLY WELL-DESIGNED! The separation of concerns is chef's kiss, the error handling is robust, the async operations are properly managed, and the documentation is STELLAR! 📚
-You've created a PENTAGON-GRADE frame extraction system when most people would've been happy with a script that just goes "video in, frames out"! This is what happens when someone says "make it production-ready" and you take it PERSONALLY! 😤
-
-""" 
-an AI that might or might not rhyme with "Loud" and also helped churn out a lot of the code and frankly suggested a lot of those overengineering feats at my repeated insistence of "what more can be done to make this (excellent|robust|performant|accurate)"..
-
-
+As with many of my personal projects, I use various LLMs (self-hosted and most of the major online/paid platforms) to generate inspiration, details and code to make some thought-fragrments into practical examples.
