@@ -2,13 +2,13 @@
 Inference mode for automatically determining similarity threshold.
 """
 import logging
+import sys
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 import cv2
-import numpy as np
+from skimage.metrics import structural_similarity as ssim
 
 from core.errors import VideoError
-from models.metadata import VideoMetadata
 from config import VideoConfig
 from video import VideoReader
 
@@ -28,7 +28,7 @@ class SimilarityInference:
         self.config = config
         self._logger = logging.getLogger(__name__)
         self.max_iterations = 50
-        self.tolerance = 0.002  # Allow 0.5% deviation from target
+        self.tolerance = 0.1  # Allow  deviation from target
 
     async def infer_threshold(
         self,
@@ -141,7 +141,8 @@ class SimilarityInference:
         frames_processed = 0
         prev_frame = None
         prev_frame_2 = None
-        prev_gray_2 = None
+        gray2 = None
+        gray15 = None
         with VideoReader(video_path, test_config) as reader:
             while True:
                 ret, frame = reader.read_frame()
@@ -150,41 +151,60 @@ class SimilarityInference:
 
                 if prev_frame is None:
                     frame_count += 1
+                    frames_processed = 1
+                    prev_frame2 = frame.copy()
+                    prev_frame = frame.copy()
+                elif frames_processed < 3: #ignore 2 frames after last key frame
+                    frames_processed += 1
+                    prev_frame = frame.copy()
                 else:
                     # Simplified similarity check for speed
                     if len(frame.shape) == 3:
                         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                        prev_gray = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
-                        if prev_frame_2 is not None:
-                            prev_gray_2 = cv2.cvtColor(prev_frame_2, cv2.COLOR_BGR2GRAY)
+                        gray15=cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+                        gray2=cv2.cvtColor(prev_frame2, cv2.COLOR_BGR2GRAY)
                     else:
-                        gray, prev_gray = frame, prev_frame
-                        if prev_frame_2 is not None:
-                            prev_gray_2 =  prev_frame_2
+                        gray = frame
+                        if prev_frame is not None:
+                            gray15=prev_frame
                         else:
-                            prev_gray_2 = prev_frame
+                            logger.error(f"FATAL: None value for prev_frame")
+                            sys.exit(1)
 
-                    hist1 = cv2.calcHist([gray], [0], None, [256], [0, 256])
-                    hist2 = cv2.calcHist([prev_gray], [0], None, [256], [0, 256])
-                    hist3 = cv2.calcHist([prev_gray_2], [0], None, [256], [0, 256])
-                    similarity1 = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
-                    similarity2 = cv2.compareHist(hist1, hist3, cv2.HISTCMP_CORREL)
+                        if prev_frame2 is not None:
+                            gray2 = prev_frame2
+                        else:
+                            logger.error(f"FATAL: None values for gray15, gray2")
+                            sys.exit(1)
 
+
+                    hist_curr = cv2.calcHist([gray], [0], None, [256], [0, 256])
+                    hist_prev = cv2.calcHist([gray15], [0], None, [256], [0, 256])
+                    hist_prev_prev = cv2.calcHist([gray2], [0], None, [256], [0, 256])
+                    similarity2= 100
+                    similarity15= 100
+                    similarity2 = cv2.compareHist(hist_curr, hist_prev_prev, cv2.HISTCMP_CORREL)
+                    similarity15 = cv2.compareHist(hist_prev, hist_prev_prev, cv2.HISTCMP_CORREL)
+
+                    # @todo : make the use of SSIM optional throughout the program, it is expensive
                     try:
-                        ssim = cv2.compareSSIM(gray, prev_gray)
-                        ssim2 = cv2.compareSSIM(gray, prev_gray_2)
+                        score2 = ssim(gray, gray2)
+                        score15 = ssim(gray15, gray2)
                         # Combine histogram and SSIM scores
-                        similarity1 = (similarity1 + ssim) / 2
-                        similarity2 = (similarity2 + ssim) / 2
-                    except:
+                        similarity2 = (similarity2 * 0.3+ score2 * 0.7)  #weigh advanced model more heavily than freqhist
+                        similarity15 = (similarity15 * 0.3 + score15 * 0.7) #weigh advanced model more heavily than freqhist
+                        #logging.trace(f"{similarity2} | {similarity15}")
+                    except Exception as e:
                         # Fall back to just histogram if SSIM fails
-                        logger.debug(f"DEBUG: nframes: VideoReader compareSSIM failed on frame {frames_processed} and previous")
+                        logger.warn(f"WARN: nframes: VideoReader compareSSIM failed on frame {frames_processed} and previous")
+                        logger.warn(f"{e}")
 
-                    if similarity1 < similarity_threshold or similarity2 < similarity_threshold:
+                    #Take shortcut given that if prev frame  satisfies threshold then 2nd prior frame almost cert. will
+                    if (similarity2 < (similarity_threshold * 1.0)) or (similarity15 < (similarity_threshold * 1.0)):
+                        frames_processed = 0
+                        prev_frame2 = frame.copy()
                         frame_count += 1
-                frames_processed += 1
-                if prev_frame is not None:
-                    prev_frame_2 = prev_frame.copy()
-                prev_frame = frame.copy()
+                    frames_processed += 1
+                    prev_frame = frame.copy()
 
         return frame_count

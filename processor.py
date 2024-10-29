@@ -5,18 +5,15 @@ import asyncio
 from collections import deque
 import logging
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor
 from typing import List, Optional, Tuple
-#from typing import Dict, List, Optional, Set, Tuple, AsyncIterator
-
+from skimage.metrics import structural_similarity as ssim
 import cv2
-#import numpy as np
-#from numpy.typing import NDArray
 
 from core.types import Frame
 from core.errors import VideoError
 from models.metadata import FrameMetadata
 from video import VideoReader
+
 
 class VideoProcessor:
     """Enhanced video processor with keyframe detection."""
@@ -26,7 +23,7 @@ class VideoProcessor:
         self.config = config
         self._logger = logging.getLogger(__name__)
         self._prev_frame = None
-        self._frame_history = deque(maxlen=2)  # Keep last 5 frames for comparison
+        self._frame_history = deque(maxlen=60)  # Keep last 5 frames for comparison
 
     def _compute_frame_similarity(self, frame1: Frame, frame2: Frame) -> float:
         """
@@ -53,13 +50,15 @@ class VideoProcessor:
         # Compare histograms
         similarity = cv2.compareHist(hist1, hist2, cv2.HISTCMP_CORREL)
 
+        # @todo - make SSIM optional, as it is expensive
         # Compute structural similarity for more accuracy
         try:
-            ssim = cv2.compareSSIM(gray1, gray2)
-            # Combine histogram and SSIM scores
-            return (similarity + ssim) / 2
-        except:
+            ssim1 = ssim(gray1, gray2) 
+            # Combine histogram and SSIM scores, weighted more heavily for the more advanced technique
+            return similarity * 0.3 + ssim1 * 0.7
+        except Exception as e:
             # Fall back to just histogram if SSIM fails
+            logging.warn(f"processor.py: _compute_frame_similarity: Failed to compute SSIM between frames, using frame-similarity based on cv2.HISTCMP_CORREL: {e}")
             return similarity
 
     def _is_keyframe(self, frame: Frame, metadata: FrameMetadata) -> bool:

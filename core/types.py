@@ -36,10 +36,10 @@ class FrameProcessor(Protocol):
     def process_frame(self, frame: Frame) -> Frame:
         """
         Process a single frame.
-        
+
         Args:
             frame: Input frame
-            
+
         Returns:
             Processed frame
         """
@@ -51,10 +51,10 @@ class FrameAnalyzer(Protocol):
     def analyze_frame(self, frame: Frame) -> float:
         """
         Analyze a single frame.
-        
+
         Args:
             frame: Input frame
-            
+
         Returns:
             Analysis score
         """
@@ -66,11 +66,11 @@ class FrameFilter(Protocol):
     def should_keep_frame(self, frame: Frame, metadata: 'FrameMetadata') -> bool:
         """
         Determine if frame should be kept.
-        
+
         Args:
             frame: Input frame
             metadata: Frame metadata
-            
+
         Returns:
             True if frame should be kept
         """
@@ -82,16 +82,16 @@ class VideoReader(Protocol):
     def read_frame(self) -> Tuple[bool, Optional[Frame]]:
         """
         Read next frame from video.
-        
+
         Returns:
             Tuple of (success flag, frame if successful)
         """
         ...
-    
+
     def get_metadata(self) -> 'VideoMetadata':
         """
         Get video metadata.
-        
+
         Returns:
             Video metadata
         """
@@ -117,25 +117,22 @@ class ProcessingResults:
         if self.additional_info is None:
             self.additional_info = {}
 
-# Import these here to avoid circular imports
-from models.metadata import FrameMetadata, VideoMetadata, AnalysisResult
-
 __all__ = [
     # Type variables
     'T', 'R',
-    
+
     # Frame types
     'Frame', 'RGBFrame', 'GrayFrame', 'Features',
-    
+
     # Enums
     'ProcessingState',
-    
+
     # Protocols
     'FrameProcessor', 'FrameAnalyzer', 'FrameFilter', 'VideoReader',
-    
+
     # Data classes
     'ProcessingResults',
-    
+
     # Re-exported types
     'FrameMetadata', 'VideoMetadata', 'AnalysisResult',
 ]

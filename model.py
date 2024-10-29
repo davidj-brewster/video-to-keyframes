@@ -1,14 +1,13 @@
 """
 Main model coordination and integration.
 """
-from typing import List, Optional
+from typing import List, Optional, Callable
 import logging
 from core.errors import VideoError
 from models.metadata import FrameMetadata, VideoMetadata
 from analysis.analyzer import FrameAnalyzer
 from video import VideoReader
 from processor import VideoProcessor
-from typing import Callable
 
 class FrameExtractionModel:
     """
