@@ -1,48 +1,19 @@
 # Video Frame Extractor
 
-Performant and advanced Python library for video frame extraction and analysis. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, multi-threading amd memory management. it supported various Video input and Image output formats. 
-Designed to be particularly well suited to medical imagery or generic videos for example screen captures.
-
-<summary>Expand to see a visual representations of the library and CLI tool's processing of a video file
-</summary>
-<details>
-The module interaction diagram shows how the main components communicate during the processing of a video file.
-
-```mermaid
-sequenceDiagram
-    participant CLI as Command Line (cli-script)
-    participant Config as Configuration (config.py)
-    participant Model as FrameExtractionModel (model.py)
-    participant Buffer as FrameBuffer (buffer.py)
-    participant Analyser as FrameAnalyser
-    participant Output as Output Directory
-
-    CLI->>Config: Load parameters
-    CLI->>Model: Initialize FrameExtractionModel
-    Model->>Buffer: Allocate FrameBuffer
-    Model->>Analyser: Initialize Analyser
-
-    CLI->>Model: Process video
-    Model->>Buffer: Add frame to buffer
-    Buffer-->>Analyser: Pass frame for analysis
-    Analyser->>Model: Detect key frames
-    Model->>Output: Save key frame to output directory
-```
-</details>
+Performant and advanced Python library for video frame extraction and analysis. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, multi-threading and memory management. It supports multiple Video input and Image output formats. 
+Designed to be particularly well suited to medical imagery or generic videos with incremental (but not necessarily smooth or consistent) movement - be they screen captures, panorama shots, presentations or any multitude of other things.
 
 ## Features
 
 ### Core Capabilities
-- "Key-frame" detection (to identify rhe most significant frames within videos having some continuous movement). This is done using motion and content analysis (from opencv library) over multiple previous frames as well as frame quality detection via contrast and sharpness detection, and additionally including Structural SIMilarity (SSIM) library from scikit-learn (sklearn) for scoring for comparing subsequent candidate frames with existing key-frames. 
-- Highly configurable CLI tool for interacting with the library
-- Inference pre-computation mode to estimate the sensitivity needed to generate _N_ key frames from the video
-- Concurrent frame processing with configurable thread pools, and a shared thread-safe frame cache
-- Memory-efficient frame buffering, memory management to limit total memory utilisation
-- Multiple output format support (PNG, JPEG, WebP)
-- Thorough debug logging
+- Highly configurable CLI tool ready to interact with the library
+- "Key-frame" detection (to identify rhe most significant frames within videos having some continuous movement).
+  - Motion and content analysis (from opencv library) over multiple previous frames
+  - Frame quality detection via contrast and sharpness detection, and additionally including Structural SIMilarity (SSIM) library from scikit-learn (sklearn) for scoring for comparing subsequent candidate frames with existing (sub)set of identified key-frames as needed. 
+- Inference pre-computation mode to estimate the library parameters needed to generate a set of _N_ key frames from the video
+- Concurrent frame processing with configurable thread pools, and a shared thread-safe frame cache and memory-efficient video frame buffering
 
 ### Analysis Features
-Every one of these is completely overkill in most cases (though there are edge-cases and advanced imagery where they help), however, I have some interest in these methods for other projects. I'll likely look to integrate more advanced methods like Canny Edge Detection, Guassian filters and such as features describing image quality and potentially frame similarity as well.
 - Motion detection using optical flow analysis
 - Frame Quality measurement signals:
   - Sharpness using Laplacian variance, really means looking for blurry low quality frame
@@ -51,12 +22,13 @@ Every one of these is completely overkill in most cases (though there are edge-c
   - Exposure using histogram analysis
 - Scene change detection
 - Temporal pattern recognition
+It is noted that almost all one of these are overkill in most scenarios; however, these and other methods are particularly of interest to me across multiple projects. I'll likely look to integrate more advanced methods like Canny Edge Detection, Guassian filters and some additional libraries to enhance feature and frame detection methods.
 
 ### Performance Features
-- Configurable thread pool for parallel processing
+- Configurable thread pool for parallel processing of frames
 - Memory-optimized thread-safe frame buffer and recent frame cache
 - Minimal frame copying via efficient np view operations
-- Retry mechanims for failed frame extraction via exponential backoff with jitter (jusy because ;))
+- Retry mechanims for failed frame extraction via exponential backoff with jitter (just because ;))
 
 ## System Requirements
 
@@ -213,6 +185,33 @@ Successfully extracted 35 frames to output
 ```
 Note there is a discrepency between estimated and actual frames generated because the estimator uses a simplified method to estimate key frame thresholds, whilst the full extraction compares not just a frame with its preceding 2 frames but a configurable number typically much higher. If this is problematic you can adjust the target frames accordingly.
 
+</details>
+
+<summary>Expand to see a visual representations of the library and CLI tool's processing of a video file
+</summary>
+<details>
+The module interaction diagram shows how the main components communicate during the processing of a video file.
+
+```mermaid
+sequenceDiagram
+    participant CLI as Command Line (cli-script)
+    participant Config as Configuration (config.py)
+    participant Model as FrameExtractionModel (model.py)
+    participant Buffer as FrameBuffer (buffer.py)
+    participant Analyser as FrameAnalyser
+    participant Output as Output Directory
+
+    CLI->>Config: Load parameters
+    CLI->>Model: Initialize FrameExtractionModel
+    Model->>Buffer: Allocate FrameBuffer
+    Model->>Analyser: Initialize Analyser
+
+    CLI->>Model: Process video
+    Model->>Buffer: Add frame to buffer
+    Buffer-->>Analyser: Pass frame for analysis
+    Analyser->>Model: Detect key frames
+    Model->>Output: Save key frame to output directory
+```
 </details>
 
 ### Parameters Reference
