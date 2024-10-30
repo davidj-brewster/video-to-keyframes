@@ -36,6 +36,7 @@ It is noted that almost all one of these are overkill in most scenarios; however
 - Python 3.12+
 - OpenCV Python (opencv-python)
 - NumPy
+- scikit-learn (for SSIM)
 
 ## Usage
 
