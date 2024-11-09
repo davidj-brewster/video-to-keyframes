@@ -1,14 +1,15 @@
 # Video Frame Extractor
 
-Performant and advanced Python library for video frame extraction and analysis. This system provides adaptive key-frame analysis based on motion detection and multi-frame image differntials, multi-threading and memory management. It supports multiple Video input and Image output formats. 
+Performant and advanced Python library + CLI for video frame extraction and analysis. Provides adaptive key-frame analysis based on motion detection and multi-frame image differentials. 
+Supports multiple Video input and Image output formats, and implements multi-threading and memory management to optimise resource utilisation. 
 Designed to be particularly well suited to medical imagery or generic videos with incremental (but not necessarily smooth or consistent) movement - be they screen captures, panorama shots, presentations or any multitude of other things.
 
 ## Features
 
 ### Core Capabilities
 - Highly configurable CLI tool ready to interact with the library
-- "Key-frame" detection (to identify rhe most significant frames within videos having some continuous movement).
-  - Motion and content analysis (from opencv library) over multiple previous frames
+- "Key-frame" detection (to identify the most significant _high quality_ frames).
+  - Motion and content analysis (from opencv library) over multiple previous frames compared to existing key-frame set.
   - Frame quality detection via contrast and sharpness detection, and additionally including Structural SIMilarity (SSIM) library from scikit-learn (sklearn) for scoring for comparing subsequent candidate frames with existing (sub)set of identified key-frames as needed. 
 - Inference pre-computation mode to estimate the library parameters needed to generate a set of _N_ key frames from the video
 - Concurrent frame processing with configurable thread pools, and a shared thread-safe frame cache and memory-efficient video frame buffering
@@ -22,7 +23,7 @@ Designed to be particularly well suited to medical imagery or generic videos wit
   - Exposure using histogram analysis
 - Scene change detection
 - Temporal pattern recognition
-It is noted that almost all one of these are overkill in most scenarios; however, these and other methods are particularly of interest to me across multiple projects. I'll likely look to integrate more advanced methods like Canny Edge Detection, Guassian filters and some additional libraries to enhance feature and frame detection methods.
+Almost all one of these are overkill in most scenarios; but they're fun.
 
 ### Performance Features
 - Configurable thread pool for parallel processing of frames
@@ -54,60 +55,64 @@ python cli-script.py input.mp4 output_dir/
 ### Advanced Usage Options
 
 <summary>Expand for more advanced configuration examples including controlling format and quality of output, configuring key-frame selection, optimising system resource utilisation and thread concurrency, logging parameters and failure/retry handling</summary>
+
 <details>
-#### Output Format Configuration
-Control the format and quality of extracted frames:
-```bash
-# Extract as JPEG with 85% quality
-python cli-script.py input.mp4 output_dir/ \
-    --format jpeg \
-    --quality 85
 
-# Extract as PNG with maximum compression
-python cli-script.py input.mp4 output_dir/ \
-    --format png \
-    --quality 9
-```
+  #### Output Format Configuration
 
-#### Frame Analysis Settings
-Configure key-frame selection:
-```bash
-# Enable key frame detection with custom similarity threshold
-python cli-script.py input.mp4 output_dir/ \
-    --enable-keyframes \
-    --similarity 0.90
-```
-
-#### Performance Tuning
-Optimize processing speed and resource usage:
-```bash
-# Configure threading and memory usage
-python cli-script.py input.mp4 output_dir/ \
-    --threads 4 \
-    --buffer-size 60 \
-    --max-memory 1024 \
-    --disable-cache
-```
-
-#### Error Handling Configuration
-Adjust retry behavior and timeouts:
-```bash
-# Configure robust error handling
-python cli-script.py input.mp4 output_dir/ \
-    --retries 5 \
-    --retry-delay 1.0 \
-    --frame-timeout 10.0 \
-    --video-timeout 60.0
-```
-
-#### Logging Configuration
-Control logging output and verbosity:
-```bash
-# Enable detailed logging to file
-python cli-script.py input.mp4 output_dir/ \
-    --log-level DEBUG \
-    --log-file processing.log
-```
+  Control the format and quality of extracted frames:
+    
+  ```bash
+  # Extract as JPEG with 85% quality
+  python cli-script.py input.mp4 output_dir/ \
+      --format jpeg \
+      --quality 85
+  
+  # Extract as PNG with maximum compression
+  python cli-script.py input.mp4 output_dir/ \
+      --format png \
+      --quality 9
+  ```
+  
+  #### Frame Analysis Settings
+  Configure key-frame selection:
+  ```bash
+  # Enable key frame detection with custom similarity threshold
+  python cli-script.py input.mp4 output_dir/ \
+      --enable-keyframes \
+      --similarity 0.90
+  ```
+  
+  #### Performance Tuning
+  Optimize processing speed and resource usage:
+  ```bash
+  # Configure threading and memory usage
+  python cli-script.py input.mp4 output_dir/ \
+      --threads 4 \
+      --buffer-size 60 \
+      --max-memory 1024 \
+      --disable-cache
+  ```
+  
+  #### Error Handling Configuration
+  Adjust retry behavior and timeouts:
+  ```bash
+  # Configure robust error handling
+  python cli-script.py input.mp4 output_dir/ \
+      --retries 5 \
+      --retry-delay 1.0 \
+      --frame-timeout 10.0 \
+      --video-timeout 60.0
+  ```
+  
+  #### Logging Configuration
+  Control logging output and verbosity:
+  ```bash
+  # Enable detailed logging to file
+  python cli-script.py input.mp4 output_dir/ \
+      --log-level DEBUG \
+      --log-file processing.log
+  ```
 
 </details>
 
@@ -302,7 +307,3 @@ sequenceDiagram
 ##### Integrate the FrameData structure into classes like processor and nframes (nframes.py is the inference to solve for sensitivity parameter)
 ##### Dockerised deployment model and e.g., REST/HTTP API interface or expose the API via a container port/sshd to the container or such - this is not so relevant for my setup but I will do it because it enables some cloud deployments and fully controlling the runtime environment
 ##### Github Actions for running pylint, and running some end-to-end tests, potentially deploying to a cloud environment like GKE
-
-### Obligatory note
-
-As with many of my personal projects, I use various LLMs (self-hosted and most of the major online/paid platforms) to generate inspiration, details and code to make some thought-fragrments into practical examples.
