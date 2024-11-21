@@ -300,10 +300,14 @@ sequenceDiagram
 ### Todo / improvements
 
 ##### Build and integrate Unit tests
+##### Have an option to resize the video before or after processing
+##### Integrate it with my image-gridder so that the resulting images are auto-cropped and put against the backdrop of a semi-transparent grid, also compressed heavily for network transit.
 ##### Increase pylint score (around 0.9 at time of writing)
 ##### Properly package dependencies, including versions, and creaate package.toml. setup.py and other components,  move source to `src` folder structure
+##### SSIM should be optional :) It's expensive, might not even be that great.
 ##### Consolidate logging and code comments in some of the scripts
 ##### It would be nice to have a debug mode where e.g., particuar factors like weight of SSIM vs Frame histograms, parameters for quality detection such as blurring via method
 ##### Integrate the FrameData structure into classes like processor and nframes (nframes.py is the inference to solve for sensitivity parameter)
 ##### Dockerised deployment model and e.g., REST/HTTP API interface or expose the API via a container port/sshd to the container or such - this is not so relevant for my setup but I will do it because it enables some cloud deployments and fully controlling the runtime environment
 ##### Github Actions for running pylint, and running some end-to-end tests, potentially deploying to a cloud environment like GKE
+##### I could see temporal.io being useful for orchestrating larger workflows that involve video manipulation and then subsequent processing downstream, might try to create a basic workflow/worker/activity set for this. 
