@@ -27,6 +27,7 @@ class FrameExtractionModel:
         self.analyzer = FrameAnalyzer(config)
         self.processor = VideoProcessor(config)
         self._metadata: Optional[VideoMetadata] = None
+        logger.setLevel('DEBUG')
         logger.debug(f"FrameExtractionModel instantiated with config: {self.config}")
 
     async def process_video(

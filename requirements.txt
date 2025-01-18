@@ -1,2 +1,6 @@
 opencv-python
-scikit-image
+scipy==1.15.1
+scikit-image==0.25.0
+numpy==2.2.1
+
+

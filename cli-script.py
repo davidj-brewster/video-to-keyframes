@@ -31,7 +31,6 @@ from nframes import SimilarityInference
 
 # Configure logging
 logger = logging.getLogger(__name__)
-
 def create_parser() -> argparse.ArgumentParser:
     """
     Create argument parser with all supported options.

@@ -27,7 +27,8 @@ class SimilarityInference:
         """Initialize inference engine."""
         self.config = config
         self._logger = logging.getLogger(__name__)
-        self.max_iterations = 50
+        self._logger.setLevel('DEBUG')
+        self.max_iterations = 30
         self.tolerance = 0.1  # Allow  deviation from target
 
     async def infer_threshold(

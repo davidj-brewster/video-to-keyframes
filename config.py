@@ -12,7 +12,7 @@ import logging
 import cv2
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel('DEBUG')
 class OutputFormat(Enum):
     """
     Supported output formats with their specific configurations.
